@@ -435,7 +435,7 @@ function main() {
     writeSourceFile(root, projectDir)
     writeLicenseFile(root)
     writeGitignoreFile(root)
-    installDevDependencies(devDependencies)
+    installDevDependencies(root, devDependencies)
     initGitRepo(root)
     createNpmIgnore(root)
     createReadme(root, packageName)
