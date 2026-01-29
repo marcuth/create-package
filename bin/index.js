@@ -90,9 +90,11 @@ function writeTsConfig(root) {
 }
 
 function writeSourceFile(root, projectDir) {
-    const content = `export function hello() {
-  return "Hello from ${projectDir}"
+    const content = `function main() {
+    console.log("Hello from ${projectDir}")
 }
+
+main()
 `
 
     fs.writeFileSync(
@@ -362,15 +364,18 @@ function installDevDependencies(root, deps) {
     }
 
     console.log("📦 Installing dev dependencies using", pm)
+    console.log("📦 Command:", pm, commands[pm].join(" "))
 
-    const result = spawnSync(
-        pm,
-        commands[pm],
-        {
-            cwd: root,
-            stdio: "inherit"
-        }
-    )
+    const result = spawnSync(pm, commands[pm], {
+        cwd: root,
+        stdio: "inherit",
+        shell: true
+    })
+
+    if (result.error) {
+        console.error("❌ Spawn error:", result.error)
+        process.exit(1)
+    }
 
     if (result.status !== 0) {
         console.error("❌ Failed to install dev dependencies")
