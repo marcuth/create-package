@@ -1,0 +1,13 @@
+{
+  "name": "create-package",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "create-package": "./bin/index.js"
+  },
+  "keywords": ["package generator"],
+  "author": "Marcuth",
+  "license": "MIT"
+}
