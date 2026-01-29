@@ -1,7 +1,7 @@
 {
   "name": "create-package",
   "version": "0.1.0",
-  "description": "",
+  "description": "Create a new package",
   "main": "index.js",
   "type": "module",
   "bin": {
