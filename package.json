@@ -1,13 +1,15 @@
 {
   "name": "@marcuth/create-package",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Create a new package",
   "main": "index.js",
   "type": "module",
   "bin": {
     "create-package": "./bin/index.js"
   },
-  "keywords": ["package generator"],
+  "keywords": [
+    "package generator"
+  ],
   "author": "Marcuth",
   "license": "MIT"
 }
