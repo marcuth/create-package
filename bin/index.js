@@ -47,7 +47,8 @@ function writePackageJson(root, packageName) {
         ],
         scripts: {
             build: "tsc",
-            dev: "ts-node ./src/index.ts"
+            dev: "ts-node ./src/index.ts",
+            format: "prettier --write \"src/**/*.ts\""
         },
         keywords: [
             "marcuth"
