@@ -50,6 +50,9 @@ function writePackageJson(root, packageName) {
             dev: "ts-node ./src/index.ts",
             format: "prettier --write \"src/**/*.ts\""
         },
+        publishConfig: {
+            access: "public"
+        },
         keywords: [
             "marcuth"
         ],
