@@ -2,8 +2,12 @@
   "name": "@marcuth/create-package",
   "version": "0.2.0",
   "description": "Create a new package",
-  "main": "index.js",
+  "main": "bin/index.js",
   "type": "module",
+  "files": [
+    "bin",
+    "src"
+  ],
   "bin": {
     "create-package": "./bin/index.js"
   },
