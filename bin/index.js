@@ -3,6 +3,7 @@
 import fs from "fs"
 import path from "path"
 import { spawnSync } from "child_process"
+import readline from "readline/promises"
 
 function getInputName() {
     return process.argv[2] || "my-package"
@@ -16,6 +17,7 @@ function parsePackageName(inputName) {
         }
 
         const [, name] = inputName.split("/")
+
         return {
             packageName: inputName,
             projectDir: name
@@ -33,11 +35,32 @@ function createDirectories(root) {
     fs.mkdirSync(path.join(root, "src"))
 }
 
-function writePackageJson(root, packageName) {
+function writePackageJson(root, packageName, repoUrl = "") {
+    let homepage = undefined
+    let bugs = undefined
+
+    if (repoUrl) {
+        // Remove .git from the end if present
+        const baseUrl = repoUrl.replace(/\.git$/, "")
+
+        if (repoUrl.includes("github.com") || repoUrl.includes("gitlab.com")) {
+            homepage = `${baseUrl}#readme`
+            bugs = {
+                url: `${baseUrl}/issues`
+            }
+        }
+    }
+
     const content = {
         name: packageName,
         version: "0.1.0",
         type: "commonjs",
+        repository: repoUrl ? {
+            type: "git",
+            url: repoUrl
+        } : undefined,
+        homepage,
+        bugs,
         main: "./dist/index.js",
         module: "./dist/index.js",
         types: "./dist/index.d.ts",
@@ -48,7 +71,8 @@ function writePackageJson(root, packageName) {
         scripts: {
             build: "tsc",
             dev: "ts-node ./src/index.ts",
-            format: "prettier --write \"src/**/*.ts\""
+            format: "prettier --write \"src/**/*.ts\"",
+            lint: "eslint \"src/**/*.ts\" --fix"
         },
         publishConfig: {
             access: "public"
@@ -290,6 +314,16 @@ dist
     )
 }
 
+function writeGitAttributes(root) {
+    const content = `*.js linguist-generated=true
+*.d.ts linguist-generated=true`
+
+    fs.writeFileSync(
+        path.join(root, ".gitattributes"),
+        content
+    )
+}
+
 function createNpmIgnore(root) {
     const content = `src/
 tsconfig.json`
@@ -315,10 +349,17 @@ function createEsLintRcConfig(root) {
             "plugin:prettier/recommended"
         ],
         "plugins": [
-            "prettier"
+            "prettier",
+            "unused-imports"
         ],
         "rules": {
-            "prettier/prettier": "error"
+            "prettier/prettier": "error",
+            "no-unused-vars": "off",
+            "unused-imports/no-unused-imports": "error",
+            "unused-imports/no-unused-vars": [
+                "warn",
+                { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+            ]
         }
     }
 
@@ -391,7 +432,7 @@ function hasGit() {
     return result.status === 0
 }
 
-function initGitRepo(root) {
+function initGitRepo(root, repoUrl = "") {
     if (!hasGit()) {
         console.log("⚠️ Git not found, skipping git init")
         return
@@ -399,7 +440,7 @@ function initGitRepo(root) {
 
     console.log("🌱 Initializing git repository")
 
-    const result = spawnSync(
+    spawnSync(
         "git",
         ["init"],
         {
@@ -408,9 +449,16 @@ function initGitRepo(root) {
         }
     )
 
-    if (result.status !== 0) {
-        console.error("❌ Falha ao inicializar git")
-        process.exit(1)
+    if (repoUrl) {
+        console.log("🔗 Setting remote origin:", repoUrl)
+        spawnSync(
+            "git",
+            ["remote", "add", "origin", repoUrl],
+            {
+                cwd: root,
+                stdio: "inherit"
+            }
+        )
     }
 }
 
@@ -432,20 +480,30 @@ function createInitialCommit(root) {
     )
 }
 
-function main() {
+async function main() {
     const inputName = getInputName()
     const { packageName, projectDir } = parsePackageName(inputName)
     const root = path.resolve(process.cwd(), projectDir)
-    const devDependencies = ["@types/node", "ts-node", "typescript", "prettier", "prettier-plugin-sort-imports", "eslint", "eslint-config-prettier", "eslint-plugin-prettier"]
+
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    })
+
+    const repoUrl = await rl.question("🔗 Repository URL (optional): ")
+    rl.close()
+
+    const devDependencies = ["@types/node", "ts-node", "typescript", "prettier", "prettier-plugin-sort-imports", "eslint", "eslint-config-prettier", "eslint-plugin-prettier", "eslint-plugin-unused-imports"]
 
     createDirectories(root)
-    writePackageJson(root, packageName)
+    writePackageJson(root, packageName, repoUrl)
     writeTsConfig(root)
     writeSourceFile(root, projectDir)
     writeLicenseFile(root)
     writeGitignoreFile(root)
+    writeGitAttributes(root)
     installDevDependencies(root, devDependencies)
-    initGitRepo(root)
+    initGitRepo(root, repoUrl)
     createNpmIgnore(root)
     createReadme(root, packageName)
     createEsLintRcConfig(root)
@@ -457,4 +515,7 @@ function main() {
     console.log("📁 Folder:", projectDir)
 }
 
-main()
+main().catch(err => {
+    console.error("❌ Unexpected error:", err)
+    process.exit(1)
+})
