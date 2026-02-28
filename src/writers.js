@@ -4,6 +4,7 @@ import path from "node:path"
 export function createDirectories(root) {
     fs.mkdirSync(root, { recursive: true })
     fs.mkdirSync(path.join(root, "src"))
+    fs.mkdirSync(path.join(root, "__tests__"))
 }
 
 export function writePackageJson(root, packageName, repoUrl = "") {
@@ -42,7 +43,9 @@ export function writePackageJson(root, packageName, repoUrl = "") {
             build: "tsc",
             dev: "ts-node ./src/index.ts",
             format: "prettier --write \"src/**/*.ts\"",
-            lint: "eslint \"src/**/*.ts\" --fix"
+            lint: "eslint \"src/**/*.ts\" --fix",
+            test: "vitest",
+            "test:cov": "vitest run --coverage"
         },
         publishConfig: {
             access: "public"
@@ -86,7 +89,7 @@ export function writeTsConfig(root) {
 }
 
 export function writeSourceFile(root, projectDir) {
-    const content = `function main() {
+    const content = `export function main() {
     console.log("Hello from ${projectDir}")
 }
 
@@ -95,6 +98,21 @@ main()
 
     fs.writeFileSync(
         path.join(root, "src/index.ts"),
+        content
+    )
+}
+
+export function writeTestFile(root) {
+    const content = `import { expect, test } from "vitest"
+import { main } from "../src/index"
+
+test("main should be a function", () => {
+    expect(typeof main).toBe("function")
+})
+`
+
+    fs.writeFileSync(
+        path.join(root, "__tests__/index.test.ts"),
         content
     )
 }

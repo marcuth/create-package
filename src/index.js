@@ -12,7 +12,8 @@ import {
     createNpmIgnore,
     createReadme,
     createEsLintRcConfig,
-    createPrettierConfig
+    createPrettierConfig,
+    writeTestFile
 } from "./writers.js"
 import { installDevDependencies, initGitRepo, createInitialCommit } from "./system.js"
 
@@ -39,7 +40,9 @@ export async function main() {
         "eslint",
         "eslint-config-prettier",
         "eslint-plugin-prettier",
-        "eslint-plugin-unused-imports"
+        "eslint-plugin-unused-imports",
+        "vitest",
+        "@vitest/coverage-v8"
     ]
 
     createDirectories(root)
@@ -55,6 +58,7 @@ export async function main() {
     createReadme(root, packageName)
     createEsLintRcConfig(root)
     createPrettierConfig(root)
+    writeTestFile(root)
     createInitialCommit(root)
 
     console.log("✅ Creeated project")
