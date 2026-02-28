@@ -6,6 +6,7 @@ A personalized CLI tool to quickly bootstrap a new TypeScript package with a pre
 
 - **TypeScript Ready**: Pre-configured `tsconfig.json` for modern Node.js development.
 - **ESLint & Prettier**: Full linting setup including `eslint-plugin-unused-imports` and automatic code formatting.
+- **Testing**: Pre-configured with [Vitest](https://vitest.dev/) for unit testing and code coverage reporting.
 - **Git Integration**: Automatically initializes a git repository, prompts for a remote origin, and sets up `.gitignore` and `.gitattributes`.
 - **Package Metadata**: Infers `homepage` and `bugs` URLs from your repository link (GitHub/GitLab).
 - **Package Manager Detection**: Intelligently detects whether you are using `npm`, `pnpm`, or `yarn`.
@@ -26,12 +27,16 @@ npm create @marcuth/package@latest @scope/my-package  # or npm init @marcuth/pac
 
 ## 🛠️ What's Inside the Generated Project?
 
-- **Standard Directory Structure**: `src/` directory for your TypeScript source code.
+- **Standard Directory Structure**: 
+    - `src/` directory for your TypeScript source code.
+    - `__tests__/` directory for your unit tests.
 - **Pre-configured Scripts**:
     - `npm run build`: Compiles TypeScript to `dist/`.
     - `npm run dev`: Runs the project using `ts-node`.
     - `npm run format`: Formats code using Prettier.
     - `npm run lint`: Checks for linting errors and removes unused imports.
+    - `npm run test`: Runs your test suite with Vitest.
+    - `npm run test:cov`: Generates a code coverage report using Vitest.
 - **Standard Files**: `.gitignore`, `.gitattributes`, `LICENSE` (MIT), `README.md`, and `.npmignore`.
 
 ## 📦 Requirements
