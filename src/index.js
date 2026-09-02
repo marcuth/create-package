@@ -13,7 +13,8 @@ import {
     createReadme,
     createEsLintRcConfig,
     createPrettierConfig,
-    writeTestFile
+    writeTestFile,
+    writeDependabotConfig
 } from "./writers.js"
 import { installDevDependencies, initGitRepo, createInitialCommit } from "./system.js"
 
@@ -33,10 +34,10 @@ export async function main() {
 
     const devDependencies = [
         "@types/node",
-        "ts-node",
-        "typescript",
+        "tsx",
+        "typescript@^7",
         "prettier",
-        "prettier-plugin-sort-imports",
+        "@ianvs/prettier-plugin-sort-imports",
         "eslint",
         "eslint-config-prettier",
         "eslint-plugin-prettier",
@@ -52,6 +53,7 @@ export async function main() {
     writeLicenseFile(root)
     writeGitignoreFile(root)
     writeGitAttributes(root)
+    writeDependabotConfig(root)
     installDevDependencies(root, devDependencies)
     initGitRepo(root, repoUrl)
     createNpmIgnore(root)

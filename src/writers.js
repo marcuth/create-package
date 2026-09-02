@@ -41,7 +41,7 @@ export function writePackageJson(root, packageName, repoUrl = "") {
         ],
         scripts: {
             build: "tsc",
-            dev: "ts-node ./src/index.ts",
+            dev: "tsx ./src/index.ts",
             format: "prettier --write \"src/**/*.ts\"",
             lint: "eslint \"src/**/*.ts\" --fix",
             test: "vitest",
@@ -362,10 +362,16 @@ export function createPrettierConfig(root) {
     "singleQuote": false,
     "tabWidth": 4,
     "useTabs": false,
-    "importTypeOrder": ["NPMPackages", "localImports"],
-    "newlineBetweenTypes": true,
-    "sortingMethod": "lineLength",
-    "plugins": ["./node_modules/prettier-plugin-sort-imports/dist/index.js"],
+    "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+    "importOrder": [
+        "^node:(.*)$",
+        "",
+        "<THIRD_PARTY_MODULES>",
+        "",
+        "^[./]"
+    ],
+    "importOrderParserPlugins": ["typescript", "jsx"],
+    "importOrderTypeScriptVersion": "5.0.0",
     "endOfLine": "auto",
     "printWidth": 120
 }`
@@ -375,3 +381,24 @@ export function createPrettierConfig(root) {
         content
     )
 }
+
+export function writeDependabotConfig(root) {
+    const githubDir = path.join(root, ".github")
+    if (!fs.existsSync(githubDir)) {
+        fs.mkdirSync(githubDir, { recursive: true })
+    }
+
+    const content = `version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+`
+
+    fs.writeFileSync(
+        path.join(githubDir, "dependabot.yml"),
+        content
+    )
+}
+

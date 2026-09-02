@@ -32,12 +32,12 @@ npm create @marcuth/package@latest @scope/my-package  # or npm init @marcuth/pac
     - `__tests__/` directory for your unit tests.
 - **Pre-configured Scripts**:
     - `npm run build`: Compiles TypeScript to `dist/`.
-    - `npm run dev`: Runs the project using `ts-node`.
+    - `npm run dev`: Runs the project using `tsx`.
     - `npm run format`: Formats code using Prettier.
     - `npm run lint`: Checks for linting errors and removes unused imports.
     - `npm run test`: Runs your test suite with Vitest.
     - `npm run test:cov`: Generates a code coverage report using Vitest.
-- **Standard Files**: `.gitignore`, `.gitattributes`, `LICENSE` (MIT), `README.md`, and `.npmignore`.
+- **Standard Files**: `.gitignore`, `.gitattributes`, `.github/dependabot.yml`, `LICENSE` (MIT), `README.md`, and `.npmignore`.
 
 ## 📦 Requirements
 
