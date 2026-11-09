@@ -9,6 +9,7 @@ A personalized CLI tool to quickly bootstrap a new TypeScript package with a pre
 - **AI Agent Instructions**: Generates a `CLAUDE.md`, `GEMINI.md` or `AGENTS.md` file for your coding agent.
 - **Private Projects**: The `--private` flag skips the npm publishing files and the MIT license.
 - **Testing**: Pre-configured with [Vitest](https://vitest.dev/) for unit testing and code coverage reporting.
+- **GitHub Actions CI**: A workflow that formats, runs `lint:fix` and tests on every push/PR, and commits any resulting changes as `github-actions[bot]`.
 - **Git Integration**: Automatically initializes a git repository, prompts for a remote origin, creates the initial commit, and sets up `.gitignore` and `.gitattributes`.
 - **Package Metadata**: Infers `homepage` and `bugs` URLs from your repository link (GitHub/GitLab) and uses your git `user.name` as the author and license holder.
 - **Package Manager Detection**: Intelligently detects whether you are using `npm`, `pnpm`, or `yarn`.
@@ -55,10 +56,11 @@ npm create @marcuth/package@latest my-package -- --claude --gemini
     - `npm run build`: Compiles TypeScript to `dist/`.
     - `npm run dev`: Runs the project using `tsx`.
     - `npm run format`: Formats code using Prettier.
-    - `npm run lint`: Checks for linting errors and removes unused imports.
+    - `npm run lint`: Checks for linting errors.
+    - `npm run lint:fix`: Fixes linting errors and removes unused imports.
     - `npm run test`: Runs your test suite with Vitest.
     - `npm run test:cov`: Generates a code coverage report using Vitest.
-- **Standard Files**: `.gitignore`, `.gitattributes`, `.github/dependabot.yml`, `eslint.config.mjs`, `.prettierrc.js`, `tsconfig.json`, `README.md`, and the agent instruction file (`CLAUDE.md` by default).
+- **Standard Files**: `.gitignore`, `.gitattributes`, `.github/dependabot.yml`, `.github/workflows/ci.yml`, `eslint.config.mjs`, `.prettierrc.js`, `tsconfig.json`, `README.md`, and the agent instruction file (`CLAUDE.md` by default).
 - **Publishing Files** (skipped with `--private`): `LICENSE` (MIT) and `.npmignore`.
 
 ## 📦 Requirements

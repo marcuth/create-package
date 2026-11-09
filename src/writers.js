@@ -44,7 +44,8 @@ export function writePackageJson(root, packageName, repoUrl = "", isPrivate = fa
             build: "tsc",
             dev: "tsx ./src/index.ts",
             format: "prettier --write \"src/**/*.ts\"",
-            lint: "eslint \"src/**/*.ts\" --fix",
+            lint: "eslint \"src/**/*.ts\"",
+            "lint:fix": "eslint \"src/**/*.ts\" --fix",
             test: "vitest",
             "test:cov": "vitest run --coverage"
         },
@@ -159,7 +160,8 @@ TypeScript package \`${packageName}\`${isPrivate ? " (private, not published to 
 
 - \`npm run dev\`: runs \`src/index.ts\` with tsx.
 - \`npm run build\`: compiles TypeScript to \`dist/\`.
-- \`npm run lint\`: runs ESLint with auto-fix.
+- \`npm run lint\`: runs ESLint.
+- \`npm run lint:fix\`: runs ESLint with auto-fix.
 - \`npm run format\`: formats the code with Prettier.
 - \`npm run test\`: runs the tests with Vitest.
 - \`npm run test:cov\`: generates the coverage report.
@@ -173,7 +175,7 @@ TypeScript package \`${packageName}\`${isPrivate ? " (private, not published to 
 
 ## Conventions
 
-- Run \`npm run lint\` and \`npm run test\` before finishing a change.
+- Run \`npm run lint:fix\` and \`npm run test\` before finishing a change.
 - Unused variables and arguments must be prefixed with \`_\`.
 - Commit messages follow Conventional Commits (\`feat:\`, \`fix:\`, \`chore:\`, \`docs:\`).
 `
@@ -422,6 +424,75 @@ export function createPrettierConfig(root) {
 
     fs.writeFileSync(
         path.join(root, ".prettierrc.js"),
+        content
+    )
+}
+
+export function writeCiWorkflow(root, packageManager = "npm") {
+    const setupPnpm = packageManager === "pnpm"
+        ? `      - uses: pnpm/action-setup@v4
+`
+        : ""
+
+    const install = {
+        npm: "npm ci",
+        pnpm: "pnpm install --frozen-lockfile",
+        yarn: "yarn install --frozen-lockfile"
+    }[packageManager]
+
+    const content = `name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: \${{ github.head_ref || github.ref_name }}
+
+${setupPnpm}      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: ${packageManager}
+
+      - name: Install dependencies
+        run: ${install}
+
+      - name: Format
+        run: ${packageManager} run format
+
+      - name: Lint (with fixes)
+        run: ${packageManager} run lint:fix
+
+      - name: Test
+        run: ${packageManager} run test -- --run
+
+      - name: Commit changes
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "style: apply format and lint fixes"
+            git push
+          fi
+`
+
+    const workflowsDir = path.join(root, ".github", "workflows")
+
+    fs.mkdirSync(workflowsDir, { recursive: true })
+
+    fs.writeFileSync(
+        path.join(workflowsDir, "ci.yml"),
         content
     )
 }

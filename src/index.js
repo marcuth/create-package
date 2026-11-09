@@ -15,9 +15,10 @@ import {
     createPrettierConfig,
     writeTestFile,
     writeDependabotConfig,
-    writeAgentFile
+    writeAgentFile,
+    writeCiWorkflow
 } from "./writers.js"
-import { installDevDependencies, initGitRepo, createInitialCommit, getGitUserName } from "./system.js"
+import { detectPackageManager, installDevDependencies, initGitRepo, createInitialCommit, getGitUserName } from "./system.js"
 
 export async function main() {
     const inputName = getInputName()
@@ -63,6 +64,7 @@ export async function main() {
     writeGitignoreFile(root)
     writeGitAttributes(root)
     writeDependabotConfig(root)
+    writeCiWorkflow(root, detectPackageManager())
     installDevDependencies(root, devDependencies)
     initGitRepo(root, repoUrl)
 
