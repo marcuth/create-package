@@ -150,8 +150,8 @@ SOFTWARE.`
     )
 }
 
-export function writeClaudeMd(root, packageName, isPrivate = false) {
-    const content = `# CLAUDE.md
+export function writeAgentFile(root, fileName, packageName, isPrivate = false) {
+    const content = `# ${fileName}
 
 TypeScript package \`${packageName}\`${isPrivate ? " (private, not published to npm)" : ""}.
 
@@ -179,7 +179,7 @@ TypeScript package \`${packageName}\`${isPrivate ? " (private, not published to 
 `
 
     fs.writeFileSync(
-        path.join(root, "CLAUDE.md"),
+        path.join(root, fileName),
         content
     )
 }

@@ -1,6 +1,6 @@
 import path from "node:path"
 import readline from "node:readline/promises"
-import { getInputName, isPrivate, parsePackageName } from "./input.js"
+import { getAgentFiles, getInputName, isPrivate, parsePackageName } from "./input.js"
 import {
     createDirectories,
     writePackageJson,
@@ -15,7 +15,7 @@ import {
     createPrettierConfig,
     writeTestFile,
     writeDependabotConfig,
-    writeClaudeMd
+    writeAgentFile
 } from "./writers.js"
 import { installDevDependencies, initGitRepo, createInitialCommit, getGitUserName } from "./system.js"
 
@@ -66,7 +66,9 @@ export async function main() {
     createEsLintConfig(root)
     createPrettierConfig(root)
     writeTestFile(root)
-    writeClaudeMd(root, packageName, privatePackage)
+    for (const fileName of getAgentFiles()) {
+        writeAgentFile(root, fileName, packageName, privatePackage)
+    }
     createInitialCommit(root)
 
     console.log("✅ Creeated project")

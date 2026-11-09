@@ -25,6 +25,13 @@ To create a private project (adds `"private": true`, uses `UNLICENSED` and skips
 npm create @marcuth/package@latest my-package -- --private
 ```
 
+By default the generated project gets a `CLAUDE.md`. Use `--claude`, `--gemini` and/or `--agents` to choose `CLAUDE.md`, `GEMINI.md` and/or `AGENTS.md` instead:
+
+```bash
+npm create @marcuth/package@latest my-package -- --agents
+npm create @marcuth/package@latest my-package -- --claude --gemini
+```
+
 Or for scoped packages:
 
 ```bash

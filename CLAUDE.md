@@ -13,7 +13,7 @@ CLI (`@marcuth/create-package`) that scaffolds a new TypeScript package with ESL
 - `src/index.js`: main flow (`main`): asks for the repository URL, defines the devDependencies, writes the files, installs, initializes git and makes the initial commit.
 - `src/writers.js`: one writer per generated file (package.json, tsconfig, eslint, prettier, gitignore, CLAUDE.md, etc.).
 - `src/system.js`: package manager detection (npm/pnpm/yarn), install, git helpers and git user name lookup.
-- `src/input.js`: package name parsing (scoped or not) and the `--private` flag.
+- `src/input.js`: package name parsing (scoped or not) and the `--private`, `--claude`, `--gemini` and `--agents` flags (agent instruction file defaults to `CLAUDE.md`).
 
 ## Conventions
 
