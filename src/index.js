@@ -1,6 +1,6 @@
 import path from "node:path"
 import readline from "node:readline/promises"
-import { getInputName, parsePackageName } from "./input.js"
+import { getInputName, isPrivate, parsePackageName } from "./input.js"
 import {
     createDirectories,
     writePackageJson,
@@ -21,6 +21,7 @@ import { installDevDependencies, initGitRepo, createInitialCommit } from "./syst
 export async function main() {
     const inputName = getInputName()
     const { packageName, projectDir } = parsePackageName(inputName)
+    const privatePackage = isPrivate()
     const root = path.resolve(process.cwd(), projectDir)
 
     const rl = readline.createInterface({
@@ -35,7 +36,7 @@ export async function main() {
     const devDependencies = [
         "@types/node",
         "tsx",
-        "typescript@^7",
+        "typescript@^6",
         "prettier",
         "@ianvs/prettier-plugin-sort-imports",
         "eslint",
@@ -49,16 +50,16 @@ export async function main() {
     ]
 
     createDirectories(root)
-    writePackageJson(root, packageName, repoUrl)
+    writePackageJson(root, packageName, repoUrl, privatePackage)
     writeTsConfig(root)
     writeSourceFile(root, projectDir)
-    writeLicenseFile(root)
+    if (!privatePackage) writeLicenseFile(root)
     writeGitignoreFile(root)
     writeGitAttributes(root)
     writeDependabotConfig(root)
     installDevDependencies(root, devDependencies)
     initGitRepo(root, repoUrl)
-    createNpmIgnore(root)
+    if (!privatePackage) createNpmIgnore(root)
     createReadme(root, packageName)
     createEsLintConfig(root)
     createPrettierConfig(root)

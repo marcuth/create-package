@@ -1,5 +1,9 @@
 export function getInputName() {
-    return process.argv[2] || "my-package"
+    return process.argv.slice(2).find(arg => !arg.startsWith("-")) || "my-package"
+}
+
+export function isPrivate() {
+    return process.argv.slice(2).includes("--private")
 }
 
 export function parsePackageName(inputName) {

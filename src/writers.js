@@ -7,7 +7,7 @@ export function createDirectories(root) {
     fs.mkdirSync(path.join(root, "__tests__"))
 }
 
-export function writePackageJson(root, packageName, repoUrl = "") {
+export function writePackageJson(root, packageName, repoUrl = "", isPrivate = false) {
     let homepage = undefined
     let bugs = undefined
 
@@ -25,6 +25,7 @@ export function writePackageJson(root, packageName, repoUrl = "") {
     const content = {
         name: packageName,
         version: "0.1.0",
+        private: isPrivate ? true : undefined,
         type: "commonjs",
         repository: repoUrl ? {
             type: "git",
@@ -35,7 +36,7 @@ export function writePackageJson(root, packageName, repoUrl = "") {
         main: "./dist/index.js",
         module: "./dist/index.js",
         types: "./dist/index.d.ts",
-        files: [
+        files: isPrivate ? undefined : [
             "dist/*",
             "!/**/__tests__"
         ],
@@ -47,14 +48,14 @@ export function writePackageJson(root, packageName, repoUrl = "") {
             test: "vitest",
             "test:cov": "vitest run --coverage"
         },
-        publishConfig: {
+        publishConfig: isPrivate ? undefined : {
             access: "public"
         },
         keywords: [
             "marcuth"
         ],
         author: "Marcuth",
-        license: "MIT"
+        license: isPrivate ? "UNLICENSED" : "MIT"
     }
 
     fs.writeFileSync(
@@ -68,6 +69,7 @@ export function writeTsConfig(root) {
         "compilerOptions": {
             "target": "es2019",
             "lib": ["ES2015"],
+            "types": ["node"],
             "module": "NodeNext",
             "esModuleInterop": true,
             "forceConsistentCasingInFileNames": true,

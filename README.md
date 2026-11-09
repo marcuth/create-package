@@ -19,6 +19,12 @@ You can run it directly npm:
 npm create @marcuth/package@latest my-package  # or npm init @marcuth/package@latest my-package
 ```
 
+To create a private project (adds `"private": true`, uses `UNLICENSED` and skips the MIT `LICENSE`, `.npmignore`, `files` and `publishConfig`), pass `--private`:
+
+```bash
+npm create @marcuth/package@latest my-package -- --private
+```
+
 Or for scoped packages:
 
 ```bash
