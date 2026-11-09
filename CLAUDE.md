@@ -1,24 +1,26 @@
 # CLAUDE.md
 
-CLI (`@marcuth/create-package`) que gera um novo pacote TypeScript com ESLint, Prettier, Vitest, git e Dependabot pré-configurados.
+CLI (`@marcuth/create-package`) that scaffolds a new TypeScript package with ESLint, Prettier, Vitest, git and Dependabot preconfigured.
 
-## Comandos
+## Commands
 
-- `npm run playground`: executa o gerador em `playground/debug_test` (pasta ignorada pelo git). Use para testar mudanças.
-- Não há build, lint nem testes neste repositório: é JavaScript ESM puro (`"type": "module"`).
+- `npm run playground`: runs the generator in `playground/debug_test` (git-ignored). Use it to test changes.
+- There is no build, lint or test setup in this repository: it is plain ESM JavaScript (`"type": "module"`).
 
-## Estrutura
+## Structure
 
-- `bin/index.js`: entrypoint do binário.
-- `src/index.js`: fluxo principal (`main`): pergunta a URL do repositório, define as devDependencies, escreve os arquivos, instala, inicializa o git e faz o commit inicial.
-- `src/writers.js`: um writer por arquivo gerado (package.json, tsconfig, eslint, prettier, gitignore, etc.).
-- `src/system.js`: detecção do gerenciador de pacotes (npm/pnpm/yarn) e comandos de instalação e git.
-- `src/input.js`: leitura e parse do nome do pacote (com ou sem escopo).
+- `bin/index.js`: binary entrypoint.
+- `src/index.js`: main flow (`main`): asks for the repository URL, defines the devDependencies, writes the files, installs, initializes git and makes the initial commit.
+- `src/writers.js`: one writer per generated file (package.json, tsconfig, eslint, prettier, gitignore, CLAUDE.md, etc.).
+- `src/system.js`: package manager detection (npm/pnpm/yarn), install, git helpers and git user name lookup.
+- `src/input.js`: package name parsing (scoped or not) and the `--private` flag.
 
-## Convenções
+## Conventions
 
-- Indentação de 4 espaços, sem ponto e vírgula, aspas duplas.
-- Para gerar um novo arquivo no projeto criado, adicione uma função `createX`/`writeX` em `src/writers.js` e chame-a em `src/index.js`.
-- Dependências do projeto gerado ficam na lista `devDependencies` de `src/index.js`.
-- Configs geradas usam o formato atual das ferramentas (ESLint flat config em `eslint.config.mjs`). O `prettier.config.js` gerado usa CommonJS.
-- Mensagens de commit seguem Conventional Commits (`feat:`, `chore:`, `docs:`).
+- 4-space indentation, no semicolons, double quotes.
+- To generate a new file in the created project, add a `createX`/`writeX` function in `src/writers.js` and call it from `src/index.js`.
+- The generated project's dependencies live in the `devDependencies` list in `src/index.js`.
+- `--private` skips the MIT `LICENSE` and `.npmignore` and marks `package.json` as private/UNLICENSED.
+- Generated configs use the tools' current formats (ESLint flat config in `eslint.config.mjs`). The generated `.prettierrc.js` uses CommonJS.
+- `typescript` is pinned to `^6` because `typescript-eslint` does not support TS 7 yet.
+- Commit messages follow Conventional Commits (`feat:`, `chore:`, `docs:`).

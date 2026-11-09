@@ -153,29 +153,29 @@ SOFTWARE.`
 export function writeClaudeMd(root, packageName, isPrivate = false) {
     const content = `# CLAUDE.md
 
-Pacote TypeScript \`${packageName}\`${isPrivate ? " (privado, não publicado no npm)" : ""}.
+TypeScript package \`${packageName}\`${isPrivate ? " (private, not published to npm)" : ""}.
 
-## Comandos
+## Commands
 
-- \`npm run dev\`: executa \`src/index.ts\` com tsx.
-- \`npm run build\`: compila TypeScript para \`dist/\`.
-- \`npm run lint\`: roda o ESLint com correção automática.
-- \`npm run format\`: formata o código com Prettier.
-- \`npm run test\`: roda os testes com Vitest.
-- \`npm run test:cov\`: gera o relatório de cobertura.
+- \`npm run dev\`: runs \`src/index.ts\` with tsx.
+- \`npm run build\`: compiles TypeScript to \`dist/\`.
+- \`npm run lint\`: runs ESLint with auto-fix.
+- \`npm run format\`: formats the code with Prettier.
+- \`npm run test\`: runs the tests with Vitest.
+- \`npm run test:cov\`: generates the coverage report.
 
-## Estrutura
+## Structure
 
-- \`src/\`: código-fonte (entrypoint em \`src/index.ts\`).
-- \`__tests__/\`: testes unitários (Vitest).
-- \`eslint.config.mjs\`: ESLint flat config com Prettier e unused-imports.
-- \`.prettierrc.js\`: Prettier (4 espaços, sem ponto e vírgula, aspas duplas, imports ordenados).
+- \`src/\`: source code (entrypoint at \`src/index.ts\`).
+- \`__tests__/\`: unit tests (Vitest).
+- \`eslint.config.mjs\`: ESLint flat config with Prettier and unused-imports.
+- \`.prettierrc.js\`: Prettier (4 spaces, no semicolons, double quotes, sorted imports).
 
-## Convenções
+## Conventions
 
-- Rode \`npm run lint\` e \`npm run test\` antes de finalizar uma alteração.
-- Variáveis e argumentos não usados devem começar com \`_\`.
-- Mensagens de commit seguem Conventional Commits (\`feat:\`, \`fix:\`, \`chore:\`, \`docs:\`).
+- Run \`npm run lint\` and \`npm run test\` before finishing a change.
+- Unused variables and arguments must be prefixed with \`_\`.
+- Commit messages follow Conventional Commits (\`feat:\`, \`fix:\`, \`chore:\`, \`docs:\`).
 `
 
     fs.writeFileSync(
