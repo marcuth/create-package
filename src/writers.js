@@ -69,7 +69,7 @@ export function writeTsConfig(root) {
     const content = {
         "compilerOptions": {
             "target": "es2019",
-            "lib": ["ES2015"],
+            "lib": ["ES2015", "DOM"],
             "types": ["node"],
             "module": "NodeNext",
             "esModuleInterop": true,
