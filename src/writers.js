@@ -330,29 +330,37 @@ export function createReadme(root, packageName) {
     )
 }
 
-export function createEsLintRcConfig(root) {
-    const content = {
-        "extends": [
-            "plugin:prettier/recommended"
-        ],
-        "plugins": [
-            "prettier",
-            "unused-imports"
-        ],
-        "rules": {
-            "prettier/prettier": "error",
-            "no-unused-vars": "off",
+export function createEsLintConfig(root) {
+    const content = `import eslint from "@eslint/js"
+import { defineConfig, globalIgnores } from "eslint/config"
+import prettierRecommended from "eslint-plugin-prettier/recommended"
+import unusedImports from "eslint-plugin-unused-imports"
+import tseslint from "typescript-eslint"
+
+export default defineConfig(
+    globalIgnores(["dist/**", "coverage/**", "node_modules/**"]),
+    eslint.configs.recommended,
+    tseslint.configs.recommended,
+    prettierRecommended,
+    {
+        plugins: {
+            "unused-imports": unusedImports
+        },
+        rules: {
+            "@typescript-eslint/no-unused-vars": "off",
             "unused-imports/no-unused-imports": "error",
             "unused-imports/no-unused-vars": [
                 "warn",
-                { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+                { vars: "all", varsIgnorePattern: "^_", args: "after-used", argsIgnorePattern: "^_" }
             ]
         }
     }
+)
+`
 
     fs.writeFileSync(
-        path.join(root, ".eslintrc.json"),
-        JSON.stringify(content, null, 4)
+        path.join(root, "eslint.config.mjs"),
+        content
     )
 }
 

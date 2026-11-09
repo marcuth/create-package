@@ -11,7 +11,7 @@ import {
     writeGitAttributes,
     createNpmIgnore,
     createReadme,
-    createEsLintRcConfig,
+    createEsLintConfig,
     createPrettierConfig,
     writeTestFile,
     writeDependabotConfig
@@ -39,6 +39,8 @@ export async function main() {
         "prettier",
         "@ianvs/prettier-plugin-sort-imports",
         "eslint",
+        "@eslint/js",
+        "typescript-eslint",
         "eslint-config-prettier",
         "eslint-plugin-prettier",
         "eslint-plugin-unused-imports",
@@ -58,7 +60,7 @@ export async function main() {
     initGitRepo(root, repoUrl)
     createNpmIgnore(root)
     createReadme(root, packageName)
-    createEsLintRcConfig(root)
+    createEsLintConfig(root)
     createPrettierConfig(root)
     writeTestFile(root)
     createInitialCommit(root)
