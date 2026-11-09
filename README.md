@@ -5,10 +5,12 @@ A personalized CLI tool to quickly bootstrap a new TypeScript package with a pre
 ## ✨ Features
 
 - **TypeScript Ready**: Pre-configured `tsconfig.json` for modern Node.js development.
-- **ESLint & Prettier**: Full linting setup including `eslint-plugin-unused-imports` and automatic code formatting.
+- **ESLint & Prettier**: ESLint flat config (`eslint.config.mjs`) with `typescript-eslint`, `eslint-plugin-unused-imports` and automatic code formatting.
+- **AI Agent Instructions**: Generates a `CLAUDE.md`, `GEMINI.md` or `AGENTS.md` file for your coding agent.
+- **Private Projects**: The `--private` flag skips the npm publishing files and the MIT license.
 - **Testing**: Pre-configured with [Vitest](https://vitest.dev/) for unit testing and code coverage reporting.
-- **Git Integration**: Automatically initializes a git repository, prompts for a remote origin, and sets up `.gitignore` and `.gitattributes`.
-- **Package Metadata**: Infers `homepage` and `bugs` URLs from your repository link (GitHub/GitLab).
+- **Git Integration**: Automatically initializes a git repository, prompts for a remote origin, creates the initial commit, and sets up `.gitignore` and `.gitattributes`.
+- **Package Metadata**: Infers `homepage` and `bugs` URLs from your repository link (GitHub/GitLab) and uses your git `user.name` as the author and license holder.
 - **Package Manager Detection**: Intelligently detects whether you are using `npm`, `pnpm`, or `yarn`.
 
 ## 🚀 Usage
@@ -19,23 +21,29 @@ You can run it directly npm:
 npm create @marcuth/package@latest my-package  # or npm init @marcuth/package@latest my-package
 ```
 
-To create a private project (adds `"private": true`, uses `UNLICENSED` and skips the MIT `LICENSE`, `.npmignore`, `files` and `publishConfig`), pass `--private`:
-
-```bash
-npm create @marcuth/package@latest my-package -- --private
-```
-
-By default the generated project gets a `CLAUDE.md`. Use `--claude`, `--gemini` and/or `--agents` to choose `CLAUDE.md`, `GEMINI.md` and/or `AGENTS.md` instead:
-
-```bash
-npm create @marcuth/package@latest my-package -- --agents
-npm create @marcuth/package@latest my-package -- --claude --gemini
-```
-
 Or for scoped packages:
 
 ```bash
 npm create @marcuth/package@latest @scope/my-package  # or npm init @marcuth/package@latest @scope/my-package
+```
+
+### Options
+
+Pass options after `--` when using `npm create`:
+
+| Flag | Description |
+| --- | --- |
+| `--private` | Creates a private project: adds `"private": true`, uses the `UNLICENSED` license, and skips the MIT `LICENSE`, `.npmignore`, `files` and `publishConfig`. |
+| `--claude` | Creates a `CLAUDE.md` agent instruction file (default when no agent flag is passed). |
+| `--gemini` | Creates a `GEMINI.md` agent instruction file. |
+| `--agents` | Creates an `AGENTS.md` agent instruction file. |
+
+The agent flags can be combined to create more than one file.
+
+```bash
+npm create @marcuth/package@latest my-package -- --private
+npm create @marcuth/package@latest my-package -- --agents
+npm create @marcuth/package@latest my-package -- --claude --gemini
 ```
 
 ## 🛠️ What's Inside the Generated Project?
@@ -50,7 +58,8 @@ npm create @marcuth/package@latest @scope/my-package  # or npm init @marcuth/pac
     - `npm run lint`: Checks for linting errors and removes unused imports.
     - `npm run test`: Runs your test suite with Vitest.
     - `npm run test:cov`: Generates a code coverage report using Vitest.
-- **Standard Files**: `.gitignore`, `.gitattributes`, `.github/dependabot.yml`, `LICENSE` (MIT), `README.md`, and `.npmignore`.
+- **Standard Files**: `.gitignore`, `.gitattributes`, `.github/dependabot.yml`, `eslint.config.mjs`, `.prettierrc.js`, `tsconfig.json`, `README.md`, and the agent instruction file (`CLAUDE.md` by default).
+- **Publishing Files** (skipped with `--private`): `LICENSE` (MIT) and `.npmignore`.
 
 ## 📦 Requirements
 
