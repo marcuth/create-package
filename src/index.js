@@ -55,20 +55,30 @@ export async function main() {
     writePackageJson(root, packageName, repoUrl, privatePackage, author)
     writeTsConfig(root)
     writeSourceFile(root, projectDir)
-    if (!privatePackage) writeLicenseFile(root, author)
+
+    if (!privatePackage) {
+        writeLicenseFile(root, author)
+    }
+
     writeGitignoreFile(root)
     writeGitAttributes(root)
     writeDependabotConfig(root)
     installDevDependencies(root, devDependencies)
     initGitRepo(root, repoUrl)
-    if (!privatePackage) createNpmIgnore(root)
+
+    if (!privatePackage) {
+        createNpmIgnore(root)
+    }
+
     createReadme(root, packageName)
     createEsLintConfig(root)
     createPrettierConfig(root)
     writeTestFile(root)
+
     for (const fileName of getAgentFiles()) {
         writeAgentFile(root, fileName, packageName, privatePackage)
     }
+
     createInitialCommit(root)
 
     console.log("✅ Creeated project")
