@@ -7,7 +7,7 @@ export function createDirectories(root) {
     fs.mkdirSync(path.join(root, "__tests__"))
 }
 
-export function writePackageJson(root, packageName, repoUrl = "", isPrivate = false) {
+export function writePackageJson(root, packageName, repoUrl = "", isPrivate = false, author = "Marcuth") {
     let homepage = undefined
     let bugs = undefined
 
@@ -54,7 +54,7 @@ export function writePackageJson(root, packageName, repoUrl = "", isPrivate = fa
         keywords: [
             "marcuth"
         ],
-        author: "Marcuth",
+        author,
         license: isPrivate ? "UNLICENSED" : "MIT"
     }
 
@@ -119,12 +119,12 @@ test("main should be a function", () => {
     )
 }
 
-export function writeLicenseFile(root) {
+export function writeLicenseFile(root, author = "Marcuth") {
     const currentYear = new Date().getFullYear()
 
     const content = `MIT License
 
-Copyright (c) ${currentYear} Marcuth
+Copyright (c) ${currentYear} ${author}
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -146,6 +146,40 @@ SOFTWARE.`
 
     fs.writeFileSync(
         path.join(root, "LICENSE"),
+        content
+    )
+}
+
+export function writeClaudeMd(root, packageName, isPrivate = false) {
+    const content = `# CLAUDE.md
+
+Pacote TypeScript \`${packageName}\`${isPrivate ? " (privado, não publicado no npm)" : ""}.
+
+## Comandos
+
+- \`npm run dev\`: executa \`src/index.ts\` com tsx.
+- \`npm run build\`: compila TypeScript para \`dist/\`.
+- \`npm run lint\`: roda o ESLint com correção automática.
+- \`npm run format\`: formata o código com Prettier.
+- \`npm run test\`: roda os testes com Vitest.
+- \`npm run test:cov\`: gera o relatório de cobertura.
+
+## Estrutura
+
+- \`src/\`: código-fonte (entrypoint em \`src/index.ts\`).
+- \`__tests__/\`: testes unitários (Vitest).
+- \`eslint.config.mjs\`: ESLint flat config com Prettier e unused-imports.
+- \`.prettierrc.js\`: Prettier (4 espaços, sem ponto e vírgula, aspas duplas, imports ordenados).
+
+## Convenções
+
+- Rode \`npm run lint\` e \`npm run test\` antes de finalizar uma alteração.
+- Variáveis e argumentos não usados devem começar com \`_\`.
+- Mensagens de commit seguem Conventional Commits (\`feat:\`, \`fix:\`, \`chore:\`, \`docs:\`).
+`
+
+    fs.writeFileSync(
+        path.join(root, "CLAUDE.md"),
         content
     )
 }

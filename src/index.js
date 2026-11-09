@@ -14,14 +14,16 @@ import {
     createEsLintConfig,
     createPrettierConfig,
     writeTestFile,
-    writeDependabotConfig
+    writeDependabotConfig,
+    writeClaudeMd
 } from "./writers.js"
-import { installDevDependencies, initGitRepo, createInitialCommit } from "./system.js"
+import { installDevDependencies, initGitRepo, createInitialCommit, getGitUserName } from "./system.js"
 
 export async function main() {
     const inputName = getInputName()
     const { packageName, projectDir } = parsePackageName(inputName)
     const privatePackage = isPrivate()
+    const author = getGitUserName()
     const root = path.resolve(process.cwd(), projectDir)
 
     const rl = readline.createInterface({
@@ -50,10 +52,10 @@ export async function main() {
     ]
 
     createDirectories(root)
-    writePackageJson(root, packageName, repoUrl, privatePackage)
+    writePackageJson(root, packageName, repoUrl, privatePackage, author)
     writeTsConfig(root)
     writeSourceFile(root, projectDir)
-    if (!privatePackage) writeLicenseFile(root)
+    if (!privatePackage) writeLicenseFile(root, author)
     writeGitignoreFile(root)
     writeGitAttributes(root)
     writeDependabotConfig(root)
@@ -64,6 +66,7 @@ export async function main() {
     createEsLintConfig(root)
     createPrettierConfig(root)
     writeTestFile(root)
+    writeClaudeMd(root, packageName, privatePackage)
     createInitialCommit(root)
 
     console.log("✅ Creeated project")

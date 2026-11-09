@@ -43,6 +43,15 @@ export function hasGit() {
     return result.status === 0
 }
 
+export function getGitUserName(fallback = "Marcuth") {
+    if (!hasGit()) return fallback
+
+    const result = spawnSync("git", ["config", "user.name"], { encoding: "utf-8" })
+    const name = result.status === 0 ? result.stdout.trim() : ""
+
+    return name || fallback
+}
+
 export function initGitRepo(root, repoUrl = "") {
     if (!hasGit()) {
         console.log("⚠️ Git not found, skipping git init")
